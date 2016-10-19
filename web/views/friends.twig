@@ -1,68 +1,60 @@
 {% extends "layout.php" %}
 
 {% block content %}
-    <h1>You have active friend requests</h1>
+    <h1>Friend Requests</h1>
     <div class="requests">
-        <div class="request">
-            <div class="pic" style="background: url(/account/web/images/mark.jpg)"></div>
-            <div class="name">Mark</div>
-            <form class="respond-form" name="respond-form" action="/account/web/respond" method="POST">
-                <input type="hidden" name="friend-id" value="1">
-                <input type="submit" name="accept" value="Accept">
-                <input type="submit" name="ignore" value="Ignore">
-            </form>
-        </div>
-        <div class="request">
-            <div class="pic" style="background: url(/account/web/images/bill.jpg)"></div>
-            <div class="name">Bill</div>
-            <form class="respond-form" name="respond-form" action="/account/web/respond" method="POST">
-                <input type="hidden" name="friend-id" value="2">
-                <input type="submit" name="accept" value="Accept">
-                <input type="submit" name="ignore" value="Ignore">
-            </form>
-        </div>
+        {% for user in friend_requests %}
+            <!-- Request Details -->
+            <div class="request">
+                <div class="pic" style="background: url(/account/web{{ user.avatar_path }})"></div>
+                <div class="name">{{ user.name }}</div>
+                <form class="respond-form" name="respond-form" action="/account/web/respond" method="POST">
+                    <input type="hidden" name="user-id" value="{{ user.id }}">
+                    <input type="submit" name="accept" value="Accept">
+                    <input type="submit" name="ignore" value="Ignore">
+                </form>
+            </div>
+        {% else %}
+            <h2>You have no active friend requests</h2>
+        {% endfor %}
     </div>
-    <h1>You have 2 friends</h1>
-    <div class="friends">
-        <div class="friend">
-            <div class="pic" style="background: url(/account/web/images/dennis.jpg)"></div>
-            <div class="name">Dennis</div>
-            <form class="view-form" name="view-form" action="/account/web/respond" method="POST">
-                <input type="hidden" name="friend-id" value="3">
-                <input type="submit" name="view" value="View Profile">
-            </form>
-        </div>
-        <div class="friend">
-            <div class="pic" style="background: url(/account/web/images/tim.png)"></div>
-            <div class="name">Tim</div>
-            <form class="view-form" name="view-form" action="/account/web/respond" method="POST">
-                <input type="hidden" name="friend-id" value="4">
-                <input type="submit" name="view" value="View Profile">
-            </form>
-        </div>
+    <h1>Friends</h1>
+    <div class="friends">    
+        {% for user in friends %}
+            <!-- Friend Details -->
+            <div class="friend">
+                <div class="pic" style="background: url(/account/web{{ user.avatar_path }})"></div>
+                <div class="name">{{ user.name }}</div>
+                <form class="view-form" name="view-form" action="/account/web/view" method="POST">
+                    <input type="hidden" name="user-id" value="{{ user.id }}">
+                    <input type="submit" name="view" value="View Profile">
+                </form>
+            </div>
+        {% else %}
+            <h2>You have no friends :&#40;</h2>
+        {% endfor %}
     </div>
     <hr>
     <div class="search">
         <input type="text" id="search-input">
         <button id="search-button">Search</button>
     </div>
-    <h4>Results</h4>
-    <div class="friends">
-        <div class="friend">
-            <div class="pic" style="background: url(/account/web/images/linus.jpg)"></div>
-            <div class="name">Linus</div>
-            <form class="send-form" name="send-form" action="/account/web/respond" method="POST">
-                <input type="hidden" name="friend-id" value="5">
-                <input type="submit" name="send" value="Send Request">
-            </form>
-        </div>
-        <div class="friend">
-            <div class="pic" style="background: url(/account/web/images/michael.jpg)"></div>
-            <div class="name">Michael</div>
-            <form class="send-form" name="send-form" action="/account/web/respond" method="POST">
-                <input type="hidden" name="friend-id" value="6">
-                <input type="submit" name="send" value="Send Request">
-            </form>
-        </div>
+    <!-- We'll display the results after an AJAX submit -->
+    <div id="search-results">
     </div>
+    <script type="text/javascript">
+        $("#search-button").click(function(event) {
+            // Prevent default behaviour, such as submitting a form.
+            event.preventDefault();
+            $.ajax({
+                url: '/account/web/search',
+                method: 'POST',
+                data: {searchTerm: $("#search-input").val()}
+            }).done(function(html) {
+                $("#search-results").html(html);
+            }).fail(function() {
+                $("#search-results").html("<p>The search failed. Please check your internet connection.</p>");
+            });
+        });
+    </script>
 {% endblock %}

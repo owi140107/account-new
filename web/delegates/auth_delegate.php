@@ -1,7 +1,7 @@
 <?php
     
     function get_user_by_email($email) {
-        require_once __DIR__.'/../seed.php';
+        require __DIR__.'/../seed.php';
         
         $statement = $pdo->prepare("SELECT * FROM users WHERE email=:email;");
         $statement->bindValue(':email', $email, PDO::PARAM_STR);

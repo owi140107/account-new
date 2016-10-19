@@ -4,6 +4,7 @@
     require_once __DIR__.'/../vendor/autoload.php';
     require_once __DIR__.'/delegates/auth_delegate.php';
     require_once __DIR__.'/delegates/user_delegate.php';
+    require_once __DIR__.'/delegates/friendship_delegate.php';
     
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
@@ -85,9 +86,55 @@
     $app->get('/friends', function(Request $request) use ($app) {
         if (!$app['session']->has('id')) {
             return $app->redirect('/account/web/login');
-        } else {
-            return $app['twig']->render('friends.twig', array());
         }
+        
+        $friend_requests = get_friend_request_users($app['session']->get('id'));
+        $friends = get_friend_users($app['session']->get('id'));
+        $model = array("friend_requests" => $friend_requests, "friends" => $friends);
+        return $app['twig']->render('friends.twig', $model);
+    });
+
+    $app->post('/respond', function(Request $request) use ($app) {
+        if (!$app['session']->has('id')) {
+            return $app->redirect('/account/web/login');
+        }
+        
+        $id = $app['session']->get('id');
+        $user_id = $request->get('user-id');
+        if (null != $request->get('accept')) {
+            // The request was accepted
+            accept_friend_request($id, $user_id);
+        } else if (null != $request->get('ignore')) {
+            // The request was ignored
+            delete_friend_request($id, $user_id);
+        }
+        
+        return $app->redirect('/account/web/friends');
+    });
+
+    $app->post('/search', function(Request $request) use ($app) {
+        if (!$app['session']->has('id')) {
+            return $app->redirect('/account/web/login');
+        }
+        
+        $search_input = $request->get('searchTerm');
+        $results = search_for_users($search_input);
+        $model = array("results" => $results);
+        
+        return $app['twig']->render('search_results.twig', $model);
+    });
+
+    $app->get('/view/{user_id}', function(Request $request, $user_id) use ($app) {
+        $user = get_user($user_id);
+        $model = array("user" => $user);
+        
+        return $app['twig']->render('profile.twig', $model);
+    });
+
+    $app->post('/view', function(Request $request) use ($app) {
+        $user_id = $request->get('user-id');
+        
+        return $app->redirect('/account/web/view/'.$user_id);
     });
 
     $app->post('/info/basic', function(Request $request) use ($app) {
@@ -98,6 +145,7 @@
         $id = $app['session']->get('id');
         $name = $request->get('name');
         update_user_name($id, $name);
+        
         return $app->redirect('/account/web/settings');
     }); 
 

@@ -6,13 +6,13 @@
           action="/account/web/login" method="post">
         <div class="form-row">
             <label for="email">Email</label>
-            <input type="text" name="email" value="{{ email }}">
-            <span class="error">{{ errors['email'] }}</span>
+            <input type="text" name="email" value="{{ email | default('') }}">
+            <span class="error">{{ errors['email'] | default('')}}</span>
         </div>
         <div class="form-row">
             <label for="password">Password</label>
             <input type="password" name="password">
-            <span class="error">{{ errors['password'] }}</span>
+            <span class="error">{{ errors['password'] | default('')}}</span>
         </div>
         <div class="form-row">
             <input type="submit" name="login" value="Login">
