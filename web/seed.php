@@ -3,6 +3,7 @@
     $pdo = null;
 
     try {
+        $database_url = getenv('DATABASE_URL');
         if ($database_url == false) {
             $host = 'localhost:8889';
             $dbname = 'account'; 
