@@ -14,7 +14,7 @@
         $dbname = getenv('DATABASE_DBNAME'); 
         $username = getenv('DATABASE_USERNAME');
         $password = getenv('DATABASE_PASSWORD');
-        $dsn = "mysql:host=$host;charset=utf8";
+        $dsn = $database_url;
     }
 
     try {
