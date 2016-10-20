@@ -1,6 +1,6 @@
 <?php
 
-    $pdo = null
+    $pdo = null;
 
     try {
         if ($database_url == false) {
