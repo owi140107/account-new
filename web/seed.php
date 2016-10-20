@@ -2,24 +2,26 @@
 
     $pdo = null;
 
+    $host = 'localhost:8889';
+    $dbname = 'account'; 
+    $username = "root";
+    $password = "root";
+    $dsn = "mysql:host=$host;charset=utf8";
+    
+    $database_url = getenv('CLEARDB_DATABASE_URL');
+    if ($database_url) {
+        $host = getenv('DATABASE_HOST');
+        $dbname = getenv('DATABASE_DBNAME'); 
+        $username = getenv('DATABASE_USERNAME');
+        $password = getenv('DATABASE_PASSWORD');
+        $dsn = "mysql:host=$host;charset=utf8";
+    }
+
     try {
-        $database_url = getenv('CLEARDB_DATABASE_URL');
-        if ($database_url == false) {
-            $host = 'localhost:8889';
-            $dbname = 'account'; 
-
-            // Note the dsn doesn't include a dbname
-            $dsn = "mysql:host=$host;charset=utf8";
-            $username = "root";
-            $password = "root";
-
-            $pdo = new PDO($dsn, $username, $password);
-            $statement = $pdo->prepare("CREATE DATABASE IF NOT EXISTS $dbname;");
-            $statement->execute();
-            $pdo->query("use $dbname;");
-        } else {
-            $pdo = new PDO($database_url);
-        }
+        $pdo = new PDO($dsn, $username, $password);
+        $statement = $pdo->prepare("CREATE DATABASE IF NOT EXISTS $dbname;");
+        $statement->execute();
+        $pdo->query("use $dbname;");
     } catch (PDOException $exception) {
         echo 'Database error: ' . $exception->getMessage();
     }
