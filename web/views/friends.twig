@@ -8,7 +8,7 @@
             <div class="request">
                 <div class="pic" style="background: url(/account/web{{ user.avatar_path }})"></div>
                 <div class="name">{{ user.name }}</div>
-                <form class="respond-form" name="respond-form" action="/account/web/respond" method="POST">
+                <form class="respond-form" name="respond-form" action="{{ webroot }}respond" method="POST">
                     <input type="hidden" name="user-id" value="{{ user.id }}">
                     <input type="submit" name="accept" value="Accept">
                     <input type="submit" name="ignore" value="Ignore">
@@ -25,7 +25,7 @@
             <div class="friend">
                 <div class="pic" style="background: url(/account/web{{ user.avatar_path }})"></div>
                 <div class="name">{{ user.name }}</div>
-                <form class="view-form" name="view-form" action="/account/web/view" method="POST">
+                <form class="view-form" name="view-form" action="{{ webroot }}view" method="POST">
                     <input type="hidden" name="user-id" value="{{ user.id }}">
                     <input type="submit" name="view" value="View Profile">
                 </form>
@@ -47,7 +47,7 @@
             // Prevent default behaviour, such as submitting a form.
             event.preventDefault();
             $.ajax({
-                url: '/account/web/search',
+                url: "{{ webroot }}search",
                 method: 'POST',
                 data: {searchTerm: $("#search-input").val()}
             }).done(function(html) {

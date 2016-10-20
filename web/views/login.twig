@@ -3,7 +3,7 @@
 {% block content %}
     <h3>Please log in by supplying your email address and password.</h3>
     <form name="login-form" class="two-col"
-          action="/account/web/login" method="post">
+          action="{{ webroot }}login" method="post">
         <div class="form-row">
             <label for="email">Email</label>
             <input type="text" name="email" value="{{ email | default('') }}">

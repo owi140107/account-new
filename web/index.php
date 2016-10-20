@@ -18,7 +18,14 @@
     $app->register(new Silex\Provider\TwigServiceProvider(), array(
         'twig.path' => __DIR__.'/views',
     ));
-
+    
+    // Globals
+    $app['webroot'] = getenv('WEBROOT');
+    if ($app['webroot'] == false) {
+        $app['webroot'] = '/account/web/';
+    }
+    $app['twig']->addGlobal('webroot', $app['webroot']);
+    
     // Before
     $app->before(function(Request $request) {
         $request->getSession()->start();
@@ -61,7 +68,7 @@
             $app['session']->set('name', $user['name']);
             $app['session']->set('email', $user['email']);
             $app['session']->set('avatar', $user['avatar_path']);
-            return $app->redirect('/account/web/settings');
+            return $app->redirect($app['webroot'].'settings');
             
         }
     });
@@ -77,7 +84,7 @@
 
     $app->get('/settings', function(Request $request) use ($app) {
         if (!$app['session']->has('id')) {
-            return $app->redirect('/account/web/login');
+            return $app->redirect($app['webroot'].'login');
         } else {
             return $app['twig']->render('settings.twig', array());
         }
@@ -85,7 +92,7 @@
 
     $app->get('/friends', function(Request $request) use ($app) {
         if (!$app['session']->has('id')) {
-            return $app->redirect('/account/web/login');
+            return $app->redirect($app['webroot'].'login');
         }
         
         $friend_requests = get_friend_request_users($app['session']->get('id'));
@@ -96,7 +103,7 @@
 
     $app->post('/respond', function(Request $request) use ($app) {
         if (!$app['session']->has('id')) {
-            return $app->redirect('/account/web/login');
+            return $app->redirect($app['webroot'].'login');
         }
         
         $id = $app['session']->get('id');
@@ -109,12 +116,12 @@
             delete_friend_request($id, $user_id);
         }
         
-        return $app->redirect('/account/web/friends');
+        return $app->redirect($app['webroot'].'friends');
     });
 
     $app->post('/search', function(Request $request) use ($app) {
         if (!$app['session']->has('id')) {
-            return $app->redirect('/account/web/login');
+            return $app->redirect($app['webroot'].'login');
         }
         
         $search_input = $request->get('searchTerm');
@@ -134,29 +141,29 @@
     $app->post('/view', function(Request $request) use ($app) {
         $user_id = $request->get('user-id');
         
-        return $app->redirect('/account/web/view/'.$user_id);
+        return $app->redirect($app['webroot'].'view/'.$user_id);
     });
 
     $app->post('/info/basic', function(Request $request) use ($app) {
         if (!$app['session']->has('id')) {
-            return $app->redirect('/account/web/login');
+            return $app->redirect($app['webroot'].'login');
         }
         
         $id = $app['session']->get('id');
         $name = $request->get('name');
         update_user_name($id, $name);
         
-        return $app->redirect('/account/web/settings');
+        return $app->redirect($app['webroot'].'settings');
     }); 
 
     $app->post('/info/avatar', function(Request $request) use ($app) {
         if (!$app['session']->has('id')) {
-            return $app->redirect('/account/web/login');
+            return $app->redirect($app['webroot'].'login');
         }
         
         $avatarFile = $request->files->get('avatar-file');
         $avatarFile->move(__DIR__.'/images', $avatarFile->getClientOriginalName());
-        return $app->redirect('/account/web/settings');
+        return $app->redirect($app['webroot'].'settings');
     }); 
 
     // Run the app

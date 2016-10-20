@@ -2,9 +2,9 @@
 <div class="users">
     {% for user in results %}
     <div class="user">
-            <div class="pic" style="background: url(/account/web{{ user.avatar_path }})"></div>
+            <div class="pic" style="background: url({{ webroot }}{{ user.avatar_path }})"></div>
             <div class="name">{{ user.name }}</div>
-            <form class="view-form" name="view-form" action="/account/web/view" method="POST">
+            <form class="view-form" name="view-form" action="{{ webroot }}view" method="POST">
                 <input type="hidden" name="user-id" value="{{ user.id }}">
                 <input type="submit" name="view" value="View Profile">
             </form>

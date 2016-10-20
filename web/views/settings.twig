@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Basic Info</h1>
     <div class="basic-info">
-        <form name="basic-info-form" action="/account/web/info/basic" method="POST" class="two-col">
+        <form name="basic-info-form" action="{{ webroot }}info/basic" method="POST" class="two-col">
             <div class="form-row">
                 <label for="user-name">Name</label>
                 <input type="text" name="user-name">
@@ -20,7 +20,7 @@
     <hr>
     <h1>Avatar Info</h1>
     <div class="avatar-info">
-        <form name="avatar-info-form" action="/account/web/info/avatar" method="POST"
+        <form name="avatar-info-form" action="{{ webroot }}info/avatar" method="POST"
               enctype="multipart/form-data" class="two-col">
             <div class="form-row">
                 <input type="file" name="avatar-file">
