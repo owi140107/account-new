@@ -6,7 +6,6 @@
     $dbname = 'account'; 
     $username = "root";
     $password = "root";
-    $dsn = "mysql:host=$host;charset=utf8";
     
     $database_url = getenv('CLEARDB_DATABASE_URL');
     if ($database_url) {
@@ -14,8 +13,9 @@
         $dbname = getenv('DATABASE_DBNAME'); 
         $username = getenv('DATABASE_USERNAME');
         $password = getenv('DATABASE_PASSWORD');
-        $dsn = $database_url;
     }
+
+    $dsn = "mysql:host=$host;charset=utf8";
 
     try {
         $pdo = new PDO($dsn, $username, $password);
