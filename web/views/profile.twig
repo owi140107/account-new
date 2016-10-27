@@ -3,7 +3,7 @@
 {% block content %}
     <h1>Profile Page</h1>
     <div class="user" style="width: 100%">
-        <div class="pic" style="background: url(/account/web{{ user.avatar_path }}); float:left;"></div>
+        <div class="pic" style="background: url({{ webroot }}{{ user.avatar_path }}); float:left;"></div>
         <div class="floatbox" style="float:left; padding-left: 5px;">
             <div class="name">{{ user.name }}</div>
             <div class="email">{{ user.email }}</div>

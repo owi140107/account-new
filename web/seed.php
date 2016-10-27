@@ -6,11 +6,11 @@
     $dbname = 'account'; 
     $username = "root";
     $password = "root";
-    
-    $database_url = getenv('CLEARDB_DATABASE_URL');
-    if ($database_url) {
+
+    // Looks for environment variable and changes database requirements. 
+    if (getenv('CKEARDB_DATABASE_URL')) {
         $host = getenv('DATABASE_HOST');
-        $dbname = getenv('DATABASE_DBNAME'); 
+        $dbname = getenv('DATABASE_DBNAME');
         $username = getenv('DATABASE_USERNAME');
         $password = getenv('DATABASE_PASSWORD');
     }

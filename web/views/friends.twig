@@ -6,7 +6,7 @@
         {% for user in friend_requests %}
             <!-- Request Details -->
             <div class="request">
-                <div class="pic" style="background: url(/account/web{{ user.avatar_path }})"></div>
+                <div class="pic" style="background: url({{ webroot }}{{ user.avatar_path }})"></div>
                 <div class="name">{{ user.name }}</div>
                 <form class="respond-form" name="respond-form" action="{{ webroot }}respond" method="POST">
                     <input type="hidden" name="user-id" value="{{ user.id }}">
@@ -23,7 +23,7 @@
         {% for user in friends %}
             <!-- Friend Details -->
             <div class="friend">
-                <div class="pic" style="background: url(/account/web{{ user.avatar_path }})"></div>
+                <div class="pic" style="background: url({{ webroot }} user.avatar_path }})"></div>
                 <div class="name">{{ user.name }}</div>
                 <form class="view-form" name="view-form" action="{{ webroot }}view" method="POST">
                     <input type="hidden" name="user-id" value="{{ user.id }}">
